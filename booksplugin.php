@@ -88,9 +88,8 @@ add_action('init', 'create_book_genre_taxonomy');
 
 function book_details_callback($post) {
     $author = get_post_meta($post->ID, 'book_author', true);
-    $selected_genre = wp_get_post_terms($post->ID, 'book_genre', ['fields' => 'ids']); // Get selected genre(s)
-    $selected_genre = !empty($selected_genre) ? $selected_genre[0] : ''; // Get the first genre if available
-
+    $selected_genre = wp_get_post_terms($post->ID, 'book_genre', ['fields' => 'ids']); 
+    $selected_genre = !empty($selected_genre) ? $selected_genre[0] : ''; 
     ?>
     <label for="book_author">Author:</label>
     <input type="text" name="book_author" value="<?php echo esc_attr($author); ?>" style="width:100%;" />
@@ -137,17 +136,17 @@ add_action('add_meta_boxes', 'add_books_meta_boxes');
 
 // Fetch book data from Laravel microservice
 function fetch_book_data($post_id) {
-    // Make sure we're only working with 'book' post type
+   
     if (get_post_type($post_id) !== 'book') {
         return;
     }
 
-    // Avoid infinite loop when updating post metadata
+   
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
         return;
     }
 
-    // Get the genre of the current book
+    /
     $genre = get_post_meta($post_id, 'book_genre', true);
 
     // Fetch book data from the microservice (Laravel)
@@ -159,11 +158,10 @@ function fetch_book_data($post_id) {
 
     // Retrieve the body of the response
     $body = wp_remote_retrieve_body($response);
-    
-    // Decode the JSON response
+  
     $book_data = json_decode($body, true);
 
-    // Check if data was returned before updating post meta
+
     if (!empty($book_data)) {
         update_post_meta($post_id, '_book_extra_data', $book_data);
 
@@ -218,7 +216,7 @@ function display_books_shortcode() {
 
                 $output .= '<div class="book-item">';
                 $output .= '<a href="' . esc_url($book_url) . '">';
-                $output .= $book_image; // Display book image
+                $output .= $book_image; 
                 $output .= '<p>' . esc_html($recommended_book['post_title']) . '</p>';
                 $output .= '</a>';
                 $output .= '</div>';
@@ -278,31 +276,31 @@ function display_books_shortcode() {
 function get_book_description($book_id) {
     $response = wp_remote_get('http://127.0.0.1:8000/api/book/' . $book_id);  // Call the microservice
     if (is_wp_error($response)) {
-        return [];  // Return an empty array if there's an error
+        return []; 
     }
 
     $body = wp_remote_retrieve_body($response);
     $book_data = json_decode($body, true);
 
-    return $book_data;  // Return the book data with description
+    return $book_data; 
 }
 
 // Helper function to get book recommendations from the microservice
 function get_book_recommendations($book_id) {
-    $response = wp_remote_get('http://127.0.0.1:8000/api/book/' . $book_id);  // Call the microservice
+    $response = wp_remote_get('http://127.0.0.1:8000/api/book/' . $book_id);  
     if (is_wp_error($response)) {
-        return [];  // Return an empty array if there's an error
+        return []; 
     }
 
     $body = wp_remote_retrieve_body($response);
     $book_data = json_decode($body, true);
 
-    // Ensure recommendations are returned correctly
+   
     if (isset($book_data['recommendations']) && is_array($book_data['recommendations'])) {
         return $book_data['recommendations'];
     }
 
-    return [];  // Return empty array if no recommendations
+    return []; 
 }
 // Register the shortcode properly
 add_shortcode('display_books', 'display_books_shortcode');
