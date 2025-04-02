@@ -6,6 +6,10 @@ This project involves creating a WordPress plugin that manages a custom post typ
 
 ## Features
 
+
+https://github.com/user-attachments/assets/219531ab-4091-403b-bc5a-58985de1d7a3
+
+
 ### WordPress Plugin
 
 - Implements a custom post type for "Books."
