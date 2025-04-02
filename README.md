@@ -5,9 +5,8 @@
 This project involves creating a WordPress plugin that manages a custom post type for "Books" and integrates with an external microservice built in Laravel.
 
 ## Features
+[![YouTube](http://i.ytimg.com/vi/8zT5KYxQaqs/hqdefault.jpg)](https://www.youtube.com/watch?v=8zT5KYxQaqs)
 
-
-https://github.com/user-attachments/assets/219531ab-4091-403b-bc5a-58985de1d7a3
 
 
 ### WordPress Plugin
