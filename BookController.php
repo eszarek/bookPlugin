@@ -25,10 +25,13 @@ class BookController extends Controller
             ->where('meta_key', 'book_author')
             ->value('meta_value');
 
-        $genre = DB::connection()->table('wp_postmeta')
-            ->where('post_id', $book->ID)
-            ->where('meta_key', 'book_genre')
-            ->value('meta_value');
+        $genre = DB::connection()->table('wp_terms')
+            ->join('wp_term_taxonomy', 'wp_terms.term_id', '=', 'wp_term_taxonomy.term_id')
+            ->join('wp_term_relationships', 'wp_term_taxonomy.term_taxonomy_id', '=', 'wp_term_relationships.term_taxonomy_id')
+            ->where('wp_term_taxonomy.taxonomy', 'book_genre')
+            ->where('wp_term_relationships.object_id', $book->ID)
+            ->value('wp_terms.name');
+        
 
 
 
@@ -60,7 +63,7 @@ class BookController extends Controller
         ->join('wp_term_relationships', 'wp_posts.ID', '=', 'wp_term_relationships.object_id')
         ->join('wp_term_taxonomy', 'wp_term_relationships.term_taxonomy_id', '=', 'wp_term_taxonomy.term_taxonomy_id')
         ->join('wp_terms', 'wp_terms.term_id', '=', 'wp_term_taxonomy.term_id')
-        ->where('wp_terms.name', 'like', "%$genre%") // Match the genre
+        ->where('wp_terms.name', $genre) // Match the genre
         ->where('wp_posts.post_type', 'book') 
         ->where('wp_posts.post_status', 'publish') 
         ->limit(3);
